@@ -79,34 +79,19 @@ real_images = next(iter(get_dataloader("dataset-ddpm/val", train=False, batch_si
 fake_images_normal = get_images("output-images", ema=False)
 fake_images_ema = get_images("output-images", ema=True)
 
-#real_images = (real_images * 255).to(torch.uint8)
-#fake_images_normal = (fake_images_normal * 255).to(torch.uint8)
-#fake_images_ema = (fake_images_ema * 255).to(torch.uint8)
+real_images = (real_images * 255).to(torch.uint8)
+fake_images_normal = (fake_images_normal * 255).to(torch.uint8)
+fake_images_ema = (fake_images_ema * 255).to(torch.uint8)
 
-#fid_normal = FrechetInceptionDistance(feature=2048, normalize=False).set_dtype(torch.float32)
-#fid_ema = FrechetInceptionDistance(feature=2048, normalize=False).set_dtype(torch.float32)
+for feature in [64, 192, 768, 2048]:
+    fid_normal = FrechetInceptionDistance(feature=feature, normalize=False).set_dtype(torch.float32)
+    fid_ema = FrechetInceptionDistance(feature=feature, normalize=False).set_dtype(torch.float32)
 
-#fid_normal.update(real_images, real=True)
-#fid_normal.update(fake_images_normal, real=False)
+    fid_normal.update(real_images, real=True)
+    fid_normal.update(fake_images_normal, real=False)
 
-#fid_ema.update(real_images, real=True)
-#fid_ema.update(fake_images_ema, real=False)
+    fid_ema.update(real_images, real=True)
+    fid_ema.update(fake_images_ema, real=False)
 
-
-#print(f"Normal: {fid_normal.compute()}")
-#print(f"EMA: {fid_ema.compute()}")
-
-w = 160
-h = 160
-
-fig = plt.figure(figsize=(24, 24))
-columns = 16
-rows = 16
-for i in range(1, columns * rows + 1):
-    img = np.load(f"output-images/ema/out{i}.npy")
-    ax = fig.add_subplot(rows, columns, i)
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-    plt.imshow(img)
-plt.savefig('ema.png', bbox_inches='tight')
-plt.show()
+    print(f"Normal: {fid_normal.compute()}")
+    print(f"EMA: {fid_ema.compute()}")
