@@ -38,3 +38,14 @@ Here are some of the resulting images:
 ### EMA model:
 
 ![screenshot](assets/ema.png)
+
+### Further improvements
+
+There is a lot of room for improvement that could be implemented with more resources and time.
+
+1. Implement the Magnitude Preserving Mechanisms as made in "Analyzing and Improving the Training Dynamics of Diffusion Models"
+2. Increase the model size and train for way longer. I did not even reach 100k steps due to GPU limitations
+3. Add dropout to the end of the Residual Blocks. I decided against this as it increased each iteration time by 20%.
+4. Play around a bit more with the learning rate as this model only works with 1 channel and far fewer parameters so the ones I used from "Diffusion Models Beat GANs on Image Synthesis" were probably not optimal. Possibly also add a scheduler.
+5. Train super resolution models to upscale image size to 512x512 or 1024x1024
+6. Get more training data. Although the images were very similar, 9000 images(1000 were used for validation) is nowhere near enough to train a diffusion model to its max capacity.
